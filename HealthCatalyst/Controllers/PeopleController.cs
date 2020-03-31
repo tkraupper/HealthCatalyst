@@ -50,15 +50,16 @@ namespace HealthCatalyst.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPerson([FromRoute] int id, [FromBody] Person person)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
-            if (id != person.id)
-            {
-                return BadRequest();
-            }
+            //if (id != person.id)
+            //{
+            //    return BadRequest();
+            //}
+            person.id = id;
 
             _context.Entry(person).State = EntityState.Modified;
 

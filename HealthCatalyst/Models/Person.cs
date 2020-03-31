@@ -11,7 +11,6 @@ namespace HealthCatalyst.Models
     {
         //PRIMARY KEY
         [Key]
-        [Column(TypeName = "int")]
         public int id { get; set; }
 
         //OTHER PROPERTIES
@@ -19,7 +18,6 @@ namespace HealthCatalyst.Models
         public string firstName { get; set; }
         [Column(TypeName = "nvarchar(50)")]
         public string lastName { get; set; }
-        [Column(TypeName = "int")]
         public int age { get; set; }
         [Column(TypeName = "nvarchar(100)")]
         public string address { get; set; }
