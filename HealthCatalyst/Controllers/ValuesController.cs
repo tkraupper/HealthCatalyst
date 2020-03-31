@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using HealthCatalyst.Models;
 
 namespace HealthCatalyst.Controllers
 {
@@ -10,36 +13,114 @@ namespace HealthCatalyst.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        // GET api/values
+        private readonly HealthCatalystDBContext _context;
+
+        public ValuesController(HealthCatalystDBContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/People
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public IEnumerable<Person> GetPeople()
         {
-            return new string[] { "value1", "value2" };
+            return _context.Person;
         }
 
-        // GET api/values/5
+        // GET: api/People/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public async Task<IActionResult> GetPerson([FromRoute] int id)
         {
-            return "value";
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var person = await _context.Person.FindAsync(id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(person);
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
+        // PUT: api/People/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> PutPerson([FromRoute] int id, [FromBody] Person person)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != person.id)
+            {
+                return BadRequest();
+            }
+            person.id = id;
+
+            _context.Entry(person).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PersonExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // POST: api/People
+        [HttpPost]
+        public async Task<IActionResult> PostPerson([FromBody] Person person)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Person.Add(person);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPerson", new { id = person.id }, person);
+        }
+
+        // DELETE: api/People/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePerson([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var person = await _context.Person.FindAsync(id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            _context.Person.Remove(person);
+            await _context.SaveChangesAsync();
+
+            return Ok(person);
+        }
+
+        private bool PersonExists(int id)
+        {
+            return _context.Person.Any(e => e.id == id);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace HealthCatalyst
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCors(options => 
-            options.WithOrigins("http://localhost:3000")
+            options.WithOrigins("http://localhost:3000", "http://localhost:3001")
             .AllowAnyHeader()
             .AllowAnyMethod());
 

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace HealthCatalyst.Models
 {
-    public class HealthCatalystDBContext:DbContext
+    public class HealthCatalystDBContext : DbContext
     {
         public HealthCatalystDBContext(DbContextOptions<HealthCatalystDBContext> options):base(options)
         {
 
         }
 
-        public DbSet<Person> People { get; set; }
+        public DbSet<Person> Person { get; set; }
     }
 }

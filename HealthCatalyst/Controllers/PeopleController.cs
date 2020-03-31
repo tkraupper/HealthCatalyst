@@ -24,7 +24,7 @@ namespace HealthCatalyst.Controllers
         [HttpGet]
         public IEnumerable<Person> GetPeople()
         {
-            return _context.People;
+            return _context.Person;
         }
 
         // GET: api/People/5
@@ -36,7 +36,7 @@ namespace HealthCatalyst.Controllers
                 return BadRequest(ModelState);
             }
 
-            var person = await _context.People.FindAsync(id);
+            var person = await _context.Person.FindAsync(id);
 
             if (person == null)
             {
@@ -91,7 +91,7 @@ namespace HealthCatalyst.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.People.Add(person);
+            _context.Person.Add(person);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPerson", new { id = person.id }, person);
@@ -106,13 +106,13 @@ namespace HealthCatalyst.Controllers
                 return BadRequest(ModelState);
             }
 
-            var person = await _context.People.FindAsync(id);
+            var person = await _context.Person.FindAsync(id);
             if (person == null)
             {
                 return NotFound();
             }
 
-            _context.People.Remove(person);
+            _context.Person.Remove(person);
             await _context.SaveChangesAsync();
 
             return Ok(person);
@@ -120,7 +120,7 @@ namespace HealthCatalyst.Controllers
 
         private bool PersonExists(int id)
         {
-            return _context.People.Any(e => e.id == id);
+            return _context.Person.Any(e => e.id == id);
         }
     }
 }
