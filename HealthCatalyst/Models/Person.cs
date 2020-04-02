@@ -9,6 +9,10 @@ namespace HealthCatalyst.Models
 {
     public class Person
     {
+        public Person(HealthCatalystDBContext @object)
+        {
+        }
+
         //PRIMARY KEY
         [Key]
         public int id { get; set; }
